@@ -1,0 +1,111 @@
+/**
+ * Configurations for the Android Plugin
+ *
+ * http://google.github.io/android-gradle-dsl/current/
+ */
+apply plugin: "de.mannodermaus.android-junit5"
+
+android {
+    compileSdkVersion Android.compileSdk
+
+    defaultConfig {
+        minSdkVersion Android.minSdk
+        targetSdkVersion Android.targetSdk
+
+        versionCode AppConfig.versionCode
+        versionName AppConfig.versionName
+
+        multiDexEnabled true
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath false
+            }
+        }
+
+        testInstrumentationRunner Android.testRunner
+    }
+
+    lintOptions {
+        quiet true
+        abortOnError false
+       // warningsAsErrors true
+        ignoreWarnings true
+        lintConfig file("$rootDir/base/lint.xml")
+    }
+
+    dexOptions {
+        javaMaxHeapSize "2g"
+        jumboMode true
+        preDexLibraries true
+    }
+
+    testOptions {
+        animationsDisabled = true
+
+        unitTests {
+            includeAndroidResources true
+            returnDefaultValues = true
+        }
+
+        junitPlatform {
+            filters {
+                engines {
+                    include 'spek2'
+                }
+            }
+            jacocoOptions {
+                // here goes all jacoco config, for example
+                html.enabled = true
+                xml.enabled = false
+                csv.enabled = false
+            }
+        }
+        unitTests.all {
+            testLogging.events = ["passed", "skipped", "failed"]
+        }
+    }
+
+    packagingOptions {
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/core-ktx_release*'
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+        main.java.srcDirs += [file("$buildDir/generated/source/kapt/main")]
+        test.java.srcDirs += 'src/test/kotlin'
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
+    }
+
+    configurations.all { config ->
+        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+            if (details.requested.group == "com.android.support" && !details.requested.name.contains('multidex')) {
+                details.useVersion Versions.appCompat
+            }
+        }
+        // disable leak canary and chuck in instrumented tests
+        // see https://github.com/square/leakcanary/wiki/FAQ#how-do-i-disable-leakcanary-in-tests
+        if (config.name.contains('UnitTest') || config.name.contains('AndroidTest')) {
+            config.resolutionStrategy.eachDependency { details ->
+                if (details.requested.group == 'com.squareup.leakcanary' && details.requested.name == 'leakcanary-android') {
+                    details.useTarget(group: details.requested.group, name: 'leakcanary-android-no-op', version: details.requested.version)
+                } else if (details.requested.group == 'com.readystatesoftware.chuck' && details.requested.name == 'library') {
+                    details.useTarget(group: details.requested.group, name: 'library-no-op', version: details.requested.version)
+                } else if (requested.group == 'org.jetbrains.kotlin' && requested.name == 'kotlin-reflect') {
+                    details.useVersion Versions.kotlin
+                }
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+

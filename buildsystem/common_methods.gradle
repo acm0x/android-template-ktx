@@ -1,0 +1,73 @@
+static def execGitHashShort() {
+    return cleanString('git rev-parse --short HEAD'.execute().text)
+}
+
+static def execGitHash() {
+    return cleanString('git rev-parse HEAD'.execute().text)
+}
+
+static def execGitBranch() {
+    return cleanString('git show -s --pretty=%d HEAD'.execute().text)
+}
+
+static def execGitCommitDate() {
+    final String cmd = "git show -s --format=%ci " + execGitHash()
+    return cleanString(cmd.execute().text)
+}
+
+def getLibVersions() {
+    final Map<String, Object> attributes = project.properties
+
+    final Set<String> keys = attributes.keySet()
+    final List<String> versionKeys = new ArrayList<>()
+
+    for (final String key : keys) {
+        if (key.toLowerCase().endsWith("version")) {
+            versionKeys.add(key)
+        }
+    }
+
+    Collections.sort(versionKeys)
+
+    final StringBuilder sb = new StringBuilder()
+
+    for (final String key : versionKeys) {
+        final Object value = attributes.get(key)
+
+        if (value instanceof String) {
+            sb.append(key)
+            sb.append(": ")
+            sb.append(value)
+            sb.append('\\n')
+        }
+    }
+
+    return cleanString(sb.toString())
+}
+
+static def cleanString(final String text) {
+    return text.trim().replaceAll('/', '').replaceAll('-', '')
+}
+
+def loadProperties(String sourceFileName) {
+    def config = new Properties()
+    def propFile = new File(sourceFileName)
+    if (propFile.canRead()) {
+        config.load(new FileInputStream(propFile))
+        project.ext.externalProps = config
+        project.ext.externalProps.keys().each {
+            if (project.hasProperty(it)) {
+                project.ext.externalProps[it] = project.property(it)
+            }
+        }
+    }
+}
+
+ext {
+    execGitHashShort = this.&execGitHashShort
+    execGitHash = this.&execGitHash
+    execGitBranch = this.&execGitBranch
+    execGitCommitDate = this.&execGitCommitDate
+    getLibVersions = this.&getLibVersions
+    loadProperties = this.&loadProperties
+}

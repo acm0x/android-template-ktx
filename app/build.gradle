@@ -1,0 +1,25 @@
+apply from: "${rootDir}/buildsystem/app_defaults.gradle"
+apply from: "${rootDir}/buildsystem/android_shared.gradle"
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    defaultConfig {
+        buildConfigField("String", "API_BASE_URL", "\"${AppConfig.apiBaseUrl}\"")
+        buildConfigField("String", "API_KEY", "\"${AppConfig.apiKey}\"")
+    }
+}
+
+dependencies {
+    implementation 'com.github.ACM64:core-ktx:0.3'
+    implementation MainApplicationDependencies.appCompat
+    implementation MainApplicationDependencies.archComponents
+    implementation MainApplicationDependencies.archComponentsRuntime
+    implementation MainApplicationDependencies.constraintLayout
+    implementation MainApplicationDependencies.glide
+    implementation MainApplicationDependencies.navigation
+    implementation MainApplicationDependencies.navigationUi
+    implementation MainApplicationDependencies.okhttp
+    implementation MainApplicationDependencies.okhttpLoggingInterceptor
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+}

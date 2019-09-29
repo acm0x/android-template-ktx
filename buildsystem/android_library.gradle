@@ -1,0 +1,7 @@
+/**
+ * Default configurations for android modules
+ */
+apply plugin: 'com.android.library'
+
+apply from: "${rootDir}/buildsystem/android_shared.gradle"
+

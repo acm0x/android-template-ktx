@@ -1,0 +1,68 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="android:colorBackground">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="colorAccent">@color/primaryLightColor</item>
+        <!--<item name="android:background">@color/primaryColor</item>-->
+        <item name="android:textColor">@color/primaryTextColor</item>
+        <item name="snackbarStyle">@style/AppTheme.Snackbar</item>
+        <item name="materialButtonStyle">@style/AppTheme.Button</item>
+        <item name="android:listDivider">@drawable/line</item>
+    </style>
+
+    <style name="ProgressStyle" parent="TextAppearance.AppCompat">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/primaryTextColor</item>
+        <item name="android:fontFamily">@font/roboto_condensed_regular</item>
+        <item name="android:textSize">@dimen/page_title_text_size</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:paddingLeft">20dp</item>
+    </style>
+
+    <style name="PageTitleStyle" parent="TextAppearance.AppCompat">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/primaryTextColor</item>
+        <item name="android:fontFamily">@font/roboto_condensed_regular</item>
+        <item name="android:textSize">@dimen/page_title_text_size</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">20dp</item>
+    </style>
+
+    <style name="TableRowStyle" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/primaryTextColor</item>
+        <item name="android:fontFamily">@font/roboto_condensed_regular</item>
+        <item name="android:textSize">@dimen/table_cell_text_size</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">marquee</item>
+    </style>
+
+    <style name="ArtistInfoSummaryStyle" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/primaryTextColor</item>
+        <item name="android:fontFamily">@font/roboto_condensed_regular</item>
+        <item name="android:textSize">@dimen/table_cell_text_size</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:padding">20dp</item>
+    </style>
+
+    <style name="AppTheme.Button" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:backgroundTint">@color/secondaryColor</item>
+        <item name="android:textColor">@color/button_text_colour</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Button</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_margin">2dp</item>
+    </style>
+
+    <style name="AppTheme.Snackbar" parent="Widget.MaterialComponents.Snackbar">
+        <item name="android:textColor">@color/secondaryTextColor</item>
+    </style>
+</resources>

@@ -1,0 +1,41 @@
+/**
+ * Common configuration for all modules
+ */
+apply plugin: 'kotlin-kapt'
+
+kapt {
+    correctErrorTypes = true
+
+    useBuildCache = true
+}
+
+dependencies {
+    // Application dependencies
+    implementation MainApplicationDependencies.kotlin
+    implementation MainApplicationDependencies.kotlinCoroutines
+    implementation MainApplicationDependencies.kotlinCoroutinesAndroid
+    implementation MainApplicationDependencies.rxjava2
+    implementation MainApplicationDependencies.arrowCore
+
+    // Compile time dependencies
+    implementation MainApplicationDependencies.dagger
+    kapt MainApplicationDependencies.daggerCompiler
+    compileOnly MainApplicationDependencies.assistedInjectAnnotations
+    kapt MainApplicationDependencies.assistedInjectProcessor
+    // FIXME
+    compileOnly "javax.annotation:jsr250-api:1.0"
+    compileOnly "javax.inject:javax.inject:1"
+
+    // Unit test
+    testImplementation UnitTestingDependencies.junit
+    testImplementation UnitTestingDependencies.kotlinTest
+    testImplementation UnitTestingDependencies.kotlinCoroutineTest
+    testImplementation UnitTestingDependencies.mockito
+    testImplementation(UnitTestingDependencies.mockitoKotlin) {
+        exclude group: 'org.jetbrains.kotlin'
+        exclude group: 'org.mockito'
+    }
+    testImplementation UnitTestingDependencies.kluent
+    testImplementation UnitTestingDependencies.kluentAndroid
+
+}

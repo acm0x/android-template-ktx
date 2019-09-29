@@ -1,0 +1,74 @@
+/**
+ * Common configuration for android modules and android main application
+ */
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+apply from: "${rootDir}/buildsystem/common_methods.gradle"
+loadProperties "${rootDir}/buildSrc/gradle.properties"
+
+apply from: "${rootDir}/buildsystem/project_shared.gradle"
+apply from: "${rootDir}/buildsystem/android_plugin.gradle"
+apply from: "${rootDir}/buildsystem/jacoco_android.gradle"
+
+dependencies {
+
+    implementation MainApplicationDependencies.androidAnnotations
+    implementation MainApplicationDependencies.room
+    implementation MainApplicationDependencies.roomRx
+    implementation MainApplicationDependencies.retrofit
+    implementation MainApplicationDependencies.retrofitGson
+    implementation MainApplicationDependencies.retrofitRxAdapter
+    implementation MainApplicationDependencies.retrofitMoshiConverter
+    implementation MainApplicationDependencies.ktxCore
+    implementation MainApplicationDependencies.viewmodelLifecycle
+
+    // kapt dependencies
+    kapt MainApplicationDependencies.archComponentLifeCycleCompiler
+    kapt MainApplicationDependencies.roomCompiler
+
+    kaptAndroidTest MainApplicationDependencies.daggerCompiler
+    kaptTest MainApplicationDependencies.roomCompiler
+
+    // Unit tests
+    testImplementation UnitTestingDependencies.robolectric
+    testImplementation UnitTestingDependencies.robolectricMultidex
+    testImplementation UnitTestingDependencies.archCore
+    // Add JUnit5 dependencies.
+    testImplementation(UnitTestingDependencies.junit5_jupiter)
+    testRuntimeOnly(UnitTestingDependencies.junit5_jupiter_runtime)
+    testImplementation(UnitTestingDependencies.junit5_jupiter_params)
+
+    // Add JUnit4 legacy dependencies.
+    testImplementation(UnitTestingDependencies.junit)
+    testRuntimeOnly(UnitTestingDependencies.junit5_vintage)
+
+    // Add AssertJ dependencies.
+    testImplementation(UnitTestingDependencies.assertj)
+
+    // Add MockK dependencies.
+    testImplementation(UnitTestingDependencies.mockk)
+
+    //Acceptance tests dependencies
+    androidTestImplementation AcceptanceTestingDependencies.testRunner
+    androidTestImplementation AcceptanceTestingDependencies.testRules
+    androidTestImplementation AcceptanceTestingDependencies.espressoCore
+    androidTestImplementation AcceptanceTestingDependencies.espressoIntents
+    androidTestImplementation AcceptanceTestingDependencies.androidAnnotations
+
+    // spek
+    testImplementation UnitTestingDependencies.spekDsl
+    testImplementation UnitTestingDependencies.spekRunner
+
+    // spek requires kotlin-reflect, omit when already in classpath
+    testImplementation MainApplicationDependencies.kotlinReflect
+
+
+}
+
+// Need this to use Java8 in order to use certain features of JUnit5 (such as calling static
+// methods on interfaces).
+
+// More info : https://github.com/mannodermaus/android-junit5/wiki/Getting-Started
+// More info : https://stackoverflow.com/a/45994990/2085356
+

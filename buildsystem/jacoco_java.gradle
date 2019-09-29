@@ -1,0 +1,54 @@
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = "${Versions.jacoco}"
+}
+
+project.afterEvaluate {
+
+    def buildTypeName = "debug"
+
+    def testTaskName = "test"
+    task "${testTaskName}Coverage"(type: JacocoReport, dependsOn: "$testTaskName") {
+        group = "Reporting"
+        description = "Generate Jacoco coverage reports on the ${buildTypeName.capitalize()} build."
+
+        def excludes = [
+                '**/R.class',
+                '**/R$*.class',
+                '**/*$ViewInjector*.*',
+                '**/*$ViewBinder*.*',
+                '**/BuildConfig.*',
+                '**/Manifest*.*',
+                '**/model/*',
+                '**/di/*.*',
+                '**/*Dto.*',
+                '**/*Activity.*',
+                '**/*Fragment.*',
+                '**/*UiModel*.*',
+                '**/*_*.*'
+        ]
+
+        classDirectories = fileTree(
+                // Java generated classes on Android project (debug build)
+                dir: "${project.buildDir}/classes/java/main",
+                excludes: excludes
+        ) + fileTree(
+                // Kotlin generated classes on Android project (debug build)
+                dir: "${project.buildDir}/classes/kotlin/main",
+                excludes: excludes
+        )
+
+        def coverageSourceDirs = [
+                "src/main/java",
+                "src/main/kotlin"
+        ]
+        additionalSourceDirs = files(coverageSourceDirs)
+        sourceDirectories = files(coverageSourceDirs)
+        executionData = files("${project.buildDir}/jacoco/${testTaskName}.exec")
+        reports {
+            xml.enabled = false
+            html.enabled = true
+        }
+    }
+}

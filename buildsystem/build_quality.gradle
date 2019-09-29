@@ -1,0 +1,64 @@
+apply plugin: 'checkstyle'
+
+def staticAnalysisSource = '.'
+def staticAnalysisIncludeFiles = '**/*.java'
+def staticAnalysisExcludeFiles = ['**/R.java',
+                                  '**/BuildConfig.java',
+                                  '**/gen/**',
+                                  '**/tests/**',
+                                  '**/androidTest/**',
+                                  '**/test/**',
+                                  '**/apt/**',
+                                  '**/build/**',
+                                  '**/custom-rules/**',
+                                  'base/**',
+                                  'everywhereadvert/**',
+                                  'v3player']
+
+checkstyle {
+    toolVersion Versions.checkstyle
+}
+
+task checkstyle(type: Checkstyle) {
+    description 'Run checkstyle'
+    group 'verification'
+    ignoreFailures = false
+
+    configFile file("$rootDir/base/quality/checkstyle/checkstyle.xml")
+    configProperties.checkstyleSuppressionsPath = file("$rootDir/base/quality/checkstyle/checkstyle_suppressions.xml").absolutePath
+
+    classpath = files()
+
+    source staticAnalysisSource
+    include staticAnalysisIncludeFiles
+    exclude staticAnalysisExcludeFiles
+}
+
+configurations {
+    ktlint
+}
+
+task ktlint(type: JavaExec, group: "verification") {
+    description = "Check Kotlin code style."
+    classpath = configurations.ktlint
+    main = "com.github.shyiko.ktlint.Main"
+    args "v3app/**/*.kt", "data-*/**/*.kt", "domain-*/**/*.kt", "library-*/**/*.kt", "ui-components/**/*.kt", "test-*/**/*.kt", "v3player/**/*.kt", "everywhereadvert/**/*.kt", "--reporter=plain", "--reporter=checkstyle,output=${buildDir}/ktlint.xml"
+    // see https://github.com/shyiko/ktlint#usage for more
+}
+
+task ktlintFormat(type: JavaExec, group: "formatting") {
+    description = "Fix Kotlin code style deviations."
+    classpath = configurations.ktlint
+    main = "com.github.shyiko.ktlint.Main"
+    args "-F", "v3app/**/*.kt", "data-*/**/*.kt", "domain-*/**/*.kt", "library-*/**/*.kt", "ui-components/**/*.kt", "test-*/**/*.kt", "v3player/**/*.kt", "everywhereadvert/**/*.kt"
+}
+
+task staticAnalysis(type: GradleBuild) {
+    description 'Helper task to run all static analysis tasks'
+    tasks = ['checkstyle', 'ktlint', ':lint']
+}
+
+dependencies {
+    checkstyle QualityDependencies.checkstyle
+    ktlint QualityDependencies.ktlint
+}

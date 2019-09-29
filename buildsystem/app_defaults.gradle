@@ -1,0 +1,26 @@
+apply plugin: 'com.android.application'
+
+
+android {
+    signingConfigs {
+        debug {
+            storeFile file(StoreDebug.storePath)
+            storePassword StoreDebug.storePassword
+            keyAlias StoreDebug.keyAlias
+            keyPassword StoreDebug.keyPassword
+        }
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+        }
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
