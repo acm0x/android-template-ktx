@@ -11,7 +11,7 @@ android {
 }
 
 dependencies {
-    implementation 'com.github.ACM64:core-ktx:0.3'
+    implementation 'com.github.ACM64:core-ktx:0.4'
     implementation MainApplicationDependencies.appCompat
     implementation MainApplicationDependencies.archComponents
     implementation MainApplicationDependencies.archComponentsRuntime
