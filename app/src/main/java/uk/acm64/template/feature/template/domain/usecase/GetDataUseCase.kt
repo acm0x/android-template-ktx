@@ -15,7 +15,6 @@ class GetDataUseCase @Inject constructor(private val apiRepository: ApiRepositor
                 Either.Right(it)
             }
         } catch (exp: Exception) {
-            exp.printStackTrace()
             Either.Left(GetDataFailure)
         }
     }
