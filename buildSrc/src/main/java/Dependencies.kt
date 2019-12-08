@@ -2,7 +2,7 @@
 
 object Versions {
     // top-level versions
-    const val gradle  = "3.6.+"
+    const val gradle  = "4.0.+"
     const val jacoco = "0.8.3"
     const val mavenGradle = "2.0"
     const val bintray = "1.8.1"
