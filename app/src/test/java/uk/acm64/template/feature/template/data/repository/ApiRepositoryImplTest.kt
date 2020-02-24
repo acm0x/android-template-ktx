@@ -33,6 +33,8 @@ class ApiRepositoryImplTest {
     @Test
     fun `get data`() = runBlockingTest {
         coEvery { apiRetrofitService.getData() } returns templateResponse
+//        mockkObject(Data)
+//        every { Data.of(any(), any())} returns theData
 
         val data = apiRepositoryImpl.getData()
 

@@ -33,6 +33,9 @@ internal class GetDataUseCaseTest {
     lateinit var apiRepository: ApiRepository
 
     @MockK
+    lateinit var exception: Exception
+
+    @MockK
     lateinit var data: Data
 
     lateinit var cut: GetDataUseCase
@@ -57,6 +60,21 @@ internal class GetDataUseCaseTest {
                 it[0] `should be` data
 
             })
+        coVerify { apiRepository.getData() }
+    }
+
+    @Test
+    fun `Use Case failure`() = runBlockingTest {
+
+        coEvery { apiRepository.getData() } throws exception
+
+        val result = cut.run(GetDataUseCase.Params)
+
+        Assert.assertTrue(result.isLeft)
+        result.either({
+            it `should be` GetDataUseCase.GetDataFailure
+
+        }, { fail("Should be left") })
         coVerify { apiRepository.getData() }
     }
 }
